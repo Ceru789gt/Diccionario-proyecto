@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Diccionario Web</title>
+</head>
+<body>
+  <h1>📘 Diccionario Web</h1>
+  <input type="text" id="buscarPalabra" placeholder="Escribe una palabra">
+  <button onclick="buscar()">Buscar</button>
+  <div id="resultado"></div>
+
+  <h2>✏️ Acceso editor</h2>
+  <input type="password" id="passwordEditor" placeholder="Contraseña">
+  <button onclick="loginEditor()">Entrar como editor</button>
+
+  <div id="zonaEditor" style="display:none; margin-top: 20px;">
+    <h3>Añadir nueva palabra</h3>
+    <input type="text" id="nuevaPalabra" placeholder="Nueva palabra">
+    <input type="text" id="nuevaDefinicion" placeholder="Definición">
+    <button onclick="agregarPalabra()">Agregar palabra</button>
+    <p id="mensajeEditor"></p>
+  </div>
+
+<script>
+// Contraseña para acceder al modo editor
+const PASSWORD_EDITOR = "522025";
+
+// Recupera el diccionario del localStorage o carga uno inicial
+let diccionario = JSON.parse(localStorage.getItem("diccionario")) || {
+  "javascript": "Lenguaje de programación usado para la web.",
+  "html": "Lenguaje de marcado para estructurar páginas.",
+  "css": "Lenguaje de estilos para diseñar páginas."
+};
+
+// Función para buscar palabras en el diccionario
+function buscar() {
+  const palabra = document.getElementById("buscarPalabra").value.toLowerCase();
+  const resultado = document.getElementById("resultado");
+  if (diccionario[palabra]) {
+    resultado.innerHTML = `<strong>${palabra}</strong>: ${diccionario[palabra]}`;
+  } else {
+    resultado.innerHTML = "❌ Palabra no encontrada.";
+  }
+}
+
+// Función para acceder al modo editor
+function loginEditor() {
+  const pass = document.getElementById("passwordEditor").value;
+  if (pass === PASSWORD_EDITOR) {
+    document.getElementById("zonaEditor").style.display = "block";
+    alert("Bienvenido al modo editor.");
+  } else {
+    alert("Contraseña incorrecta.");
+  }
+}
+
+// Función para agregar nuevas palabras al diccionario
+function agregarPalabra() {
+  const palabra = document.getElementById("nuevaPalabra").value.toLowerCase();
+  const definicion = document.getElementById("nuevaDefinicion").value;
+  const mensaje = document.getElementById("mensajeEditor");
+
+  if (palabra && definicion) {
+    // Añade la palabra al diccionario
+    diccionario[palabra] = definicion;
+
+    // Guarda el diccionario actualizado en localStorage
+    localStorage.setItem("diccionario", JSON.stringify(diccionario));
+
+    mensaje.innerText = "✅ Palabra agregada correctamente.";
+    document.getElementById("nuevaPalabra").value = "";
+    document.getElementById("nuevaDefinicion").value = "";
+  } else {
+    mensaje.innerText = "⚠️ Completa ambos campos.";
+  }
+}
+</script>
+
+</body>
+</html>
